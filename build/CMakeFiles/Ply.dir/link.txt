@@ -1,0 +1,1 @@
+/usr/bin/c++     -Wno-deprecated -no-cpp-precomp -mlong-branch -Wl,-search_paths_first -headerpad_max_install_names   CMakeFiles/Ply.dir/Ply.cpp.o  -o Ply  -L/Users/valentinaarmenise/Applications/VTKlib/VTKBin/lib/vtk-5.6 

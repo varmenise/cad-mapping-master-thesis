@@ -1,0 +1,54 @@
+vtkPlane (0x100818db0)
+  Debug: Off
+  Modified Time: 17
+  Reference Count: 1
+  Registered Events: (none)
+  Transform: (None)
+  Normal: (0, 0, 1)
+  Origin: (0, 0, 0)
+
+vtkPlane (0x100818ec0)
+  Debug: Off
+  Modified Time: 18
+  Reference Count: 1
+  Registered Events: (none)
+  Transform: (None)
+  Normal: (0, 0, 1)
+  Origin: (0, 0, 0)
+
+vtkPlane (0x100819950)
+  Debug: Off
+  Modified Time: 19
+  Reference Count: 1
+  Registered Events: (none)
+  Transform: (None)
+  Normal: (0, 0, 1)
+  Origin: (0, 0, 0)
+
+vtkPlane (0x10081a4a0)
+  Debug: Off
+  Modified Time: 20
+  Reference Count: 1
+  Registered Events: (none)
+  Transform: (None)
+  Normal: (0, 0, 1)
+  Origin: (0, 0, 0)
+
+vtkPlane (0x10081a5d0)
+  Debug: Off
+  Modified Time: 21
+  Reference Count: 1
+  Registered Events: (none)
+  Transform: (None)
+  Normal: (0, 0, 1)
+  Origin: (0, 0, 0)
+
+vtkPlane (0x10081a700)
+  Debug: Off
+  Modified Time: 22
+  Reference Count: 1
+  Registered Events: (none)
+  Transform: (None)
+  Normal: (0, 0, 1)
+  Origin: (0, 0, 0)
+

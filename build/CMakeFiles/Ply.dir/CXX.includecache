@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/valentinaarmenise/Applications/VTKlib/VTKBin/myCode/Test/Debug.h
+
+/Users/valentinaarmenise/Applications/VTKlib/VTKBin/myCode/Test/Ply.cpp
+iostream
+-
+fstream.h
+-
+list
+-
+string
+-
+cstdio
+-
+stdio.h
+-
+Test.h
+/Users/valentinaarmenise/Applications/VTKlib/VTKBin/myCode/Test/Test.h
+Ply.h
+/Users/valentinaarmenise/Applications/VTKlib/VTKBin/myCode/Test/Ply.h
+Debug.h
+/Users/valentinaarmenise/Applications/VTKlib/VTKBin/myCode/Test/Debug.h
+
+/Users/valentinaarmenise/Applications/VTKlib/VTKBin/myCode/Test/Ply.h
+
+/Users/valentinaarmenise/Applications/VTKlib/VTKBin/myCode/Test/Test.h
+list
+-
+
