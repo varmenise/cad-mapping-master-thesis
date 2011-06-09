@@ -104,6 +104,7 @@ CMakeFiles/Test.dir/Test.cpp.o: /Users/valentinaarmenise/Applications/VTKlib/VTK
 CMakeFiles/Test.dir/Test.cpp.o: /Users/valentinaarmenise/Applications/VTKlib/VTKBin/include/vtk-5.6/vtkstd/string
 CMakeFiles/Test.dir/Test.cpp.o: /Users/valentinaarmenise/Applications/VTKlib/VTKBin/include/vtk-5.6/vtkstd/utility
 CMakeFiles/Test.dir/Test.cpp.o: /Users/valentinaarmenise/Applications/VTKlib/VTKBin/include/vtk-5.6/vtkstd/vector
+CMakeFiles/Test.dir/Test.cpp.o: ../Clusters_Set.h
 CMakeFiles/Test.dir/Test.cpp.o: ../Debug.h
 CMakeFiles/Test.dir/Test.cpp.o: ../Elements.h
 CMakeFiles/Test.dir/Test.cpp.o: ../MouseInteractorStyle.h

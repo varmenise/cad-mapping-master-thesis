@@ -1,29 +1,29 @@
-/*
- *  Translation.h
- *  
- *
- *  Created by valentina armenise on 3/15/11.
- *  Copyright 2011 Politecnico di Torino. All rights reserved.
- *
- */
+	/*
+	 *  Translation.h
+	 *  
+	 *
+	 *  Created by valentina armenise on 3/15/11.
+	 *  Copyright 2011 Politecnico di Torino. All rights reserved.
+	 *
+	 */
 
 
-namespace  TranslLib{
-class Translation: public Ply {
-	public:
-	Ply * translated_model;
-	Point *origin;
-	double object_value;
-	int Id;
-	bool flag;
-	int orientation[3];
-	
-	float getPointDistance(const std::vector<Point> &pointcl, int nt, Point origin);
-	static Translation* New(Ply* translated_model, Point*point);
-	void printPose(std::string inputFilename, int n_vertex, std::string output);
-	
-};
-}
+	namespace  TranslLib{
+		class Translation: public Ply {
+		public:
+			Ply * translated_model;
+			Point *origin;
+			double object_value;
+			int Id;
+			bool flag;
+			int orientation[3];
+			
+			float getPointDistance(const std::vector<Point> &pointcl, int nt, Point origin, int size, int max);
+			static Translation* New(Ply* translated_model, Point*point);
+			void printPose(std::string inputFilename, int n_vertex, std::string output);
+			
+		};
+	}
 	TranslLib::Translation* TranslLib::Translation::New(Ply*plymodel, Point *origin){
 		Translation* newtrans=new Translation();
 		newtrans->vertexes=plymodel->vertexes;
@@ -36,10 +36,10 @@ class Translation: public Ply {
 		return newtrans;
 		
 	}
-	
-float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl,int nt, Point origin){
+
+	float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl,int nt, Point origin, int size, int max){
 		//u can replace translated_model with this
-			
+		
 		Point point;
 		float a,b,c,d;
 		int it=0,nface,npoint=0;
@@ -47,28 +47,33 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 		
 		this->object_value=0;
 		this->flag=0;
-
+		
+		double total=0;
+		
 		
 		double xa,xb,ya,yb,za,zb;
 		double da, db;
 		int entered=0;
 		bool entered1, entered2,entered3,entered4;
 		double minim;
-	//FILE* pFile=fopen("inputCleanedframe2.xyz","r");
+		//FILE* pFile=fopen("inputCleanedframe2.xyz","r");
 		int count=0;
-	
-	//while(!feof(pFile)){
-	//	fscanf(pFile,"%f %f %f",&x,&y,&z);
+		double pro;
+		double late;
+		double ent;
+		int bad_detection=0;
+		//while(!feof(pFile)){
+		//	fscanf(pFile,"%f %f %f",&x,&y,&z);
 		
-	//	point.px=x;
-	//	point.py=y;
-	//	point.pz=z;
-	
-	//std::cout<<"start"<<start<<std::endl;
-		while(count<8109){
+		//	point.px=x;
+		//	point.py=y;
+		//	point.pz=z;
+		
+		//std::cout<<"size"<<size<<std::endl;
+		while(count<size){
 			//std::cout<<pointcl[count].px<<" "<<pointcl[count].py<<" "<<pointcl[count].pz<<std::endl;
 			const Point &point=pointcl[count];
-		//std::cout<<x<<" "<<y<<" "<<z<<std::endl;
+			//std::cout<<x<<" "<<y<<" "<<z<<std::endl;
 			count++;
 			double mindist=0;
 			std::list<Face>::iterator iter = this->faces.begin();
@@ -86,17 +91,17 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 				b=piano.parameters[1];
 				c=piano.parameters[2];
 				d=piano.parameters[3];
-			
+				
 				dist=point.computeDistance(a,b,c,d);
 				Vertex vtx=piano.point[0];
-			
+				
 				double p[3] = {point.px, point.py, point.pz};
 				double origin[3] = {vtx.vx, vtx.vy, vtx.vz};
 				double mod=sqrt(a*a+b*b+c*c);
 				double normal[3] = {a/mod, b/mod, c/mod};
 				double projected[3];
 				double projmatrix[4][4];
-			
+				
 				
 				double xo[3],t;
 				xo[0]=p[0]-origin[0];
@@ -126,7 +131,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					
 					entered++;
 					entered1=true;
-										
+					
 				}
 				
 				
@@ -140,8 +145,8 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					
 					entered++;
 					entered2=true;
-					}
-			
+				}
+				
 				
 				
 				xa=piano.point[2].vx;
@@ -199,13 +204,14 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 				pr.pz=projected[2];
 				
 				
+				
 				if(entered==2){
 					if(entered1==false){
-					d[0]=Point::computeDistancePointLine(pr, piano.point[0], piano.point[1]);//sto ritornando il quadrato per farl auguale ma toglilo
+						d[0]=Point::computeDistancePointLine(pr, piano.point[0], piano.point[1]);//sto ritornando il quadrato per farl auguale ma toglilo
 						
 					}
 					else if(entered2==false){
-					d[0]=Point::computeDistancePointLine(pr, piano.point[1], piano.point[2]);
+						d[0]=Point::computeDistancePointLine(pr, piano.point[1], piano.point[2]);
 						
 					}
 					
@@ -215,20 +221,20 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					if(entered3==false){
 						
 						d[1]=Point::computeDistancePointLine(pr, piano.point[2], piano.point[3]);
-					
+						
 					}
 					
-			
+					
 					else if(entered4==false){
 						d[1]=Point::computeDistancePointLine(pr, piano.point[3], piano.point[0]);
 					}
-			
+					
 					minim=d[0];
 					for(int i=1;i<2;i++){
 						if(d[i]<=minim)
 							minim=d[i];
 					}
-				
+					
 				}
 				if(entered==4){
 					d[0]=(projected[0]-va[0])*(projected[0]-va[0])+(projected[1]-va[1])*(projected[1]-va[1])+(projected[2]-va[2])*(projected[2]-va[2]);
@@ -239,23 +245,47 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					for(int i=1;i<4;i++){
 						if(d[i]<=minim){
 							minim=d[i];
-						
+							
 						}
 					}
 					
 				}
+				if(entered==0){
+					minim=0;
+				}
 				
-				dist+=sqrt(minim);
+				
+				
+				double proj=dist;
+				double lat=sqrt(minim);
+				double entr=entered;
+				dist=sqrt(dist*dist+sqrt(minim)*sqrt(minim));
+				
+				/*if(point.px>435 &&point.py>327 && point.pz>=1131){
+				 std::cout<<point.px<<" "<<point.py<<" "<<point.pz<<std::endl;
+				 std::cout<<"projection  "<<proj<<" on face"<<it<<std::endl;
+				 std::cout<<"entered" <<entr<<std::endl;
+				 }*/
 				
 				
 				if (it==0){
 					mindist=dist;
 					nface=it;
+					pro=proj;
+					late=lat;
+					ent=entr;
 				}
+				
+				
+				
+				
 				
 				else if (dist<mindist){
 					mindist=dist;
 					nface=it;
+					pro=proj;
+					late=lat;
+					ent=entr;
 				}
 				
 				iter++;
@@ -265,14 +295,46 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 			}
 			
 			
-			if (mindist>=100){
+			
+			total+=mindist;
+			
+			
+			if(mindist>max){
+				bad_detection++;
 				
-				mindist=mindist*1;//by 3??
+				
 			}
 			
-			double m=0.5*mindist;
 			
-			this->object_value+=(1-m);
+			if(bad_detection>500){
+				this->object_value=0;
+				count=size;
+			}
+			if(mindist>30){
+				//if(point.px>435 &&point.py>327 && point.pz>=1131){
+				//	std::cout<<"maior than "<<std::endl;
+				//
+				//	std::cout<<mindist<<std::endl;
+				//std::cout<<point.px<<" "<<point.py<<" "<<point.pz<<std::endl;
+				//std::cout<<"pro"<<pro<<std::endl;
+				//std::cout<<"lat"<<late<<std::endl;
+				
+				mindist=mindist*4;
+			}
+			/*if (mindist<1){
+			 
+			 mindist=0;//by 3??
+			 }*/
+			
+			//double m=0.5*mindist;
+			
+			if(mindist<=200){
+				
+				this->object_value+=(1-mindist/200);
+			}
+			else {
+				this->object_value+=0;
+			}
 			
 			this->flag=1;
 			
@@ -281,12 +343,14 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 			
 			
 		}
-
+		
+		//std::cout<<"total "<<total<<std::endl;
+		
 		return nface;
 		
 	}
-	
-	
+
+
 	void TranslLib::Translation::printPose(std::string inputFilename, int n_vertex, std::string output){
 		
 		std::list <Vertex> vertexes;
@@ -350,5 +414,5 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 		
 		
 	}
-	
-	
+
+

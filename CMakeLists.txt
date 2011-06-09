@@ -10,7 +10,7 @@ INCLUDE(FindPkgConfig)
 
 PKG_CHECK_MODULES(NUKLEI nuklei)
 INCLUDE_DIRECTORIES(${NUKLEI_INCLUDE_DIR})
-LINK_DIRECTORIES(${NUKLEI_LIBRARY_DIR})
+LINK_DIRECTORIES(${NUKLEI_LIBRARY_DIR} /usr/local/lib)
 
 ADD_DEFINITIONS(${NUKLEI_CFLAGS})
 
@@ -22,4 +22,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 ADD_EXECUTABLE(Test Test.cpp Ply.cpp )
 
-TARGET_LINK_LIBRARIES(Test vtkHybrid nuklei)
+TARGET_LINK_LIBRARIES(Test vtkHybrid nuklei pcl_io pcl_filters pcl_segmentation pcl_features pcl_kdtree pcl_common)
