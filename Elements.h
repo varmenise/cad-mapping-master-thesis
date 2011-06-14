@@ -33,9 +33,9 @@
 		public:
 		float parameters[4];
 		Vertex point[4];
-		float A[4][4];
-		float B[3];
-		float m[4][4];
+		float A[4][4];//vertexes beloging to the face
+		float B[3];//not used?
+		float m[4][4];//not used?
 		
 		float* getParameters(Piano*piano);
 	//	float correctDistance(Point point);

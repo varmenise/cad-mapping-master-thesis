@@ -600,6 +600,28 @@ pcl/segmentation/extract_clusters.h
 
 /Users/valentinaarmenise/Applications/VTKlib/VTKBin/myCode/Test/MouseInteractorStyle.h
 
+/Users/valentinaarmenise/Applications/VTKlib/VTKBin/myCode/Test/Ply.cpp
+iostream
+-
+fstream
+-
+cstring
+-
+list
+-
+string
+-
+cstdio
+-
+stdio.h
+-
+math.h
+-
+Elements.h
+/Users/valentinaarmenise/Applications/VTKlib/VTKBin/myCode/Test/Elements.h
+Ply.h
+/Users/valentinaarmenise/Applications/VTKlib/VTKBin/myCode/Test/Ply.h
+
 /Users/valentinaarmenise/Applications/VTKlib/VTKBin/myCode/Test/Ply.h
 
 /Users/valentinaarmenise/Applications/VTKlib/VTKBin/myCode/Test/Test.cpp
