@@ -109,7 +109,7 @@ int main ( int argc, char *argv[] )
 	Vertex *vertex= new Vertex();
 	Face *face=new Face();
 	std::list<Face>::iterator iter = plymodel->faces.begin();
-	Piano *plane=new Piano();
+	Plane *plane=new Plane();
 	int it=0,itr=0;
 	int c=0;
 	
@@ -119,7 +119,7 @@ int main ( int argc, char *argv[] )
 		*face=*iter;
 		
 		
-		plane=face->getPiano(plymodel->vertexes,*face);
+		plane=face->getPlane(plymodel->vertexes,*face);
 		iter->plane=*plane;
 		
 		
@@ -285,7 +285,7 @@ int main ( int argc, char *argv[] )
 	
 		Face *face=new Face();
 		std::list<Face>::iterator iter = model->faces.begin();
-		Piano *plane=new Piano();
+		Plane *plane=new Plane();
 		
 	
 		while(iter!= model->faces.end()){
@@ -293,7 +293,7 @@ int main ( int argc, char *argv[] )
 			*face=*iter;
 			
 			
-			plane=face->getPiano(model->vertexes,*face);
+			plane=face->getPlane(model->vertexes,*face);
 			iter->plane=*plane;
 			
 			
@@ -398,7 +398,7 @@ int main ( int argc, char *argv[] )
 		
 			Face *face=new Face();
 			std::list<Face>::iterator iter = translated_model->faces.begin();
-			Piano *plane=new Piano();
+			Plane *plane=new Plane();
 			it=0;
 			itr=0;
 			
@@ -409,7 +409,7 @@ int main ( int argc, char *argv[] )
 				*face=*iter;
 				
 				
-				plane=face->getPiano(translated_model->vertexes,*face);
+				plane=face->getPlane(translated_model->vertexes,*face);
 				iter->plane=*plane;
 				
 				
