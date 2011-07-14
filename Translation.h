@@ -19,9 +19,9 @@ public:
 	int orientation[3];
 	int errors;
 
-	float getPointDistance(const std::vector<Point> &pointcl, int nt, Point origin, int size, int max);
-	static Translation* New(Ply* translated_model, Point*point);
-	void printPose(std::string inputFilename, int n_vertex, std::string output);
+	float getPointDistance(const std::vector<Point> &pointcl, int nt, Point origin, int size, int max);//return the value of the objective function for a given pose
+	static Translation* New(Ply* translated_model, Point*point);//translate the ply model
+	void printPose(std::string inputFilename, int n_vertex, std::string output);//print the pose in a file
 
 };
 }
@@ -61,15 +61,9 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 	double late;
 	double ent;
 	int bad_detection=0;
-	//while(!feof(pFile)){
-	//	fscanf(pFile,"%f %f %f",&x,&y,&z);
-
-	//	point.px=x;
-	//	point.py=y;
-	//	point.pz=z;
-	int filter=-1;
+	int filter=-1;//the filter is used to consider 1 point out of 10
 	//std::cout<<"size"<<size<<std::endl;
-	while(count<size){
+	while(count<size){//for all the point cloud
 		filter++;
 		if(filter==10)
 			filter=-1;
@@ -77,13 +71,11 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 		if(filter==0){
 			//std::cout<<pointcl[count].px<<" "<<pointcl[count].py<<" "<<pointcl[count].pz<<std::endl;
 			const Point &point=pointcl[count];
-			//std::cout<<x<<" "<<y<<" "<<z<<std::endl;
-
 			double mindist=0;
 			std::list<Face>::iterator iter = this->faces.begin();
 			it=0;
 			double tmp;
-			while(iter!= this->faces.end()){//for each face, computing the distance point-face
+			while(iter!= this->faces.end()){//computing the distance point-face for each face
 				entered=0;
 				entered1=false;
 				entered2=false;
@@ -96,7 +88,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 				c=plane.parameters[2];
 				d=plane.parameters[3];
 
-				dist=point.computeDistance(a,b,c,d);
+				dist=point.computeDistance(a,b,c,d);//distance between the point and the plane the face belongs to
 				Vertex vtx=plane.point[0];
 
 				double p[3] = {point.px, point.py, point.pz};
@@ -120,7 +112,20 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 				projected[2]=p[2]-t*normal[2];
 				
 
-				if(face.n_vertexes==4){//if the face is rectangular
+				if(face.n_vertexes==4){//if the face is rectangular: if the porjected point is in the rectangle then the distance point-face is the distance point-plane.
+					/*if the projected point is outside the rectangle it can be in 8 different regions
+					
+				  1		  2        3
+					 _____________
+					|			  |		
+				  8	|             | 4
+					|             |
+					|_____________|
+					             
+				  7	      6        5 
+					 
+					 
+					 */
 
 					//std::cout<<"rectangular face"<<std::endl;
 
@@ -131,6 +136,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					za=plane.point[0].vz;
 					zb=plane.point[1].vz;
 
+					//if the projection of the projected point on the edge determined by the vertexes 0 and 1 of the plane does not fall within the edge then the counter "entered" is incremented
 					if(((projected[0]-xa)*(xb-xa)+(projected[1]-ya)*(yb-ya)+(projected[2]-za)*(zb-za)>=0)&&(projected[0]-xb)*(xa-xb)+(projected[1]-yb)*(ya-yb)+(projected[2]-zb)*(za-zb)>=0){
 
 						dist+=0;
@@ -150,6 +156,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					yb=plane.point[2].vy;
 					za=plane.point[1].vz;
 					zb=plane.point[2].vz;
+					//if the projection of the projected point on the edge determined by the vertexes 1 and 2 of the plane does not fall within the edge then the counter "entered" is incremented
 					if(((projected[0]-xa)*(xb-xa)+(projected[1]-ya)*(yb-ya)+(projected[2]-za)*(zb-za)<0)||(projected[0]-xb)*(xa-xb)+(projected[1]-yb)*(ya-yb)+(projected[2]-zb)*(za-zb)<0){
 
 						entered++;
@@ -163,7 +170,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					yb=plane.point[3].vy;
 					za=plane.point[2].vz;
 					zb=plane.point[3].vz;
-
+					//if the projection of the projected point on the edge determined by the vertexes 2 and 3 of the plane does not fall within the edge then the counter "entered" is incremented
 					if(((projected[0]-xa)*(xb-xa)+(projected[1]-ya)*(yb-ya)+(projected[2]-za)*(zb-za)<0)||(projected[0]-xb)*(xa-xb)+(projected[1]-yb)*(ya-yb)+(projected[2]-zb)*(za-zb)<0){
 
 						entered++;
@@ -177,6 +184,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					yb=plane.point[0].vy;
 					za=plane.point[3].vz;
 					zb=plane.point[0].vz;
+					//if the projection of the projected point on the edge determined by the vertexes 3 and 0 of the plane does not fall within the edge then the counter "entered" is incremented
 					if(((projected[0]-xa)*(xb-xa)+(projected[1]-ya)*(yb-ya)+(projected[2]-za)*(zb-za)<0)||(projected[0]-xb)*(xa-xb)+(projected[1]-yb)*(ya-yb)+(projected[2]-zb)*(za-zb)<0){
 
 						entered++;
@@ -208,7 +216,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					pr.py=projected[1];
 					pr.pz=projected[2];
 
-					if(entered==2){
+					if(entered==2){//if entered equals 2, it means the projected point falls in regions 2,4,6,8
 
 						if(entered1==false){
 
@@ -240,7 +248,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 						}
 					}
 
-					if(entered==4){
+					if(entered==4){//if enterd equals 4, it means the projected point falls in regions  1,3,5,7
 						d[0]=(projected[0]-va[0])*(projected[0]-va[0])+(projected[1]-va[1])*(projected[1]-va[1])+(projected[2]-va[2])*(projected[2]-va[2]);
 						d[1]=(projected[0]-vb[0])*(projected[0]-vb[0])+(projected[1]-vb[1])*(projected[1]-vb[1])+(projected[2]-vb[2])*(projected[2]-vb[2]);
 						d[2]=(projected[0]-vc[0])*(projected[0]-vc[0])+(projected[1]-vc[1])*(projected[1]-vc[1])+(projected[2]-vc[2])*(projected[2]-vc[2]);
@@ -254,11 +262,13 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 							}
 						}
 					}
-					if(entered==0){
+					if(entered==0){ //if entered equals 0, then the projected point is in region 0 and the distance point-face coincides with the distance point-plane
 						minim=0;
 					}
 				}
-				if(face.n_vertexes==3){//if the face is triangular
+				if(face.n_vertexes==3){//if the face is triangular: if the projected point falls inside the triangle then the distance is the distance point-plane.
+					//If the porjection of the point falls outside the triangle then the distance between the point and each vertex and each segment-line is computed.
+					//The minimum among these distances is considered.
 					//std::cout<<"triangular face"<<std::endl;
 
 					double d[6];
@@ -275,17 +285,6 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					vc[0]=plane.point[2].vx;
 					vc[1]=plane.point[2].vy;
 					vc[2]=plane.point[2].vz;
-
-					/*int zab,zbc,zca;
-
-						zab=(projected[0]-va[0])*(vb[1]-va[1])-(projected[1]-va[1])*(vb[0]-va[0]);
-						zbc=(projected[0]-vb[0])*(vc[1]-vb[1])-(projected[1]-vb[1])*(vc[0]-vb[0]);
-						zca=(projected[0]-vc[0])*(va[1]-vc[1])-(projected[1]-vc[1])*(va[0]-vc[0]);
-
-						if((zab>0&&zbc>0&&zca>0)||(zab<0&&zbc<0&&zca<0)){
-							minim=0;
-							//std::cout<<"here"<<std::endl;
-						}*/
 
 					int a[3],a2[3],b[3],flag=0;
 					double cr1[3],cr2[3];
@@ -500,13 +499,6 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 			}
 
 			if(mindist>30){
-				//if(point.px>435 &&point.py>327 && point.pz>=1131){
-				//	std::cout<<"maior than "<<std::endl;
-				//
-				//	std::cout<<mindist<<std::endl;
-				//std::cout<<point.px<<" "<<point.py<<" "<<point.pz<<std::endl;
-				//std::cout<<"pro"<<pro<<std::endl;
-				//std::cout<<"lat"<<late<<std::endl;
 
 				mindist=mindist*4;
 				//mindist=mindist*8;
