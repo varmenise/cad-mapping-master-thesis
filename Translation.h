@@ -38,7 +38,6 @@ TranslLib::Translation* TranslLib::Translation::New(Ply*plymodel, Point *origin)
 }
 
 float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl,int nt, Point origin, int size, int max){
-	//u can replace translated_model with this
 
 	Point point;
 	float a,b,c,d;
@@ -84,7 +83,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 			std::list<Face>::iterator iter = this->faces.begin();
 			it=0;
 			double tmp;
-			while(iter!= this->faces.end()){//for each face
+			while(iter!= this->faces.end()){//for each face, computing the distance point-face
 				entered=0;
 				entered1=false;
 				entered2=false;
@@ -109,7 +108,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 
 				double xo[3],t;
 
-				//projecting the point p
+				//projecting the point p on the plane the face belongs to
 				xo[0]=p[0]-origin[0];
 				xo[1]=p[1]-origin[1];
 				xo[2]=p[2]-origin[2];
@@ -119,8 +118,9 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 				projected[0]=p[0]-t*normal[0];
 				projected[1]=p[1]-t*normal[1];
 				projected[2]=p[2]-t*normal[2];
+				
 
-				if(face.n_vertexes==4){
+				if(face.n_vertexes==4){//if the face is rectangular
 
 					//std::cout<<"rectangular face"<<std::endl;
 
@@ -212,7 +212,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 
 						if(entered1==false){
 
-							d[0]=Point::computeDistancePointLine(pr, plane.point[0], plane.point[1]);//sto ritornando il quadrato per farl auguale ma toglilo
+							d[0]=Point::computeDistancePointLine(pr, plane.point[0], plane.point[1]);
 
 						}
 						else if(entered2==false){
@@ -258,7 +258,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 						minim=0;
 					}
 				}
-				if(face.n_vertexes==3){
+				if(face.n_vertexes==3){//if the face is triangular
 					//std::cout<<"triangular face"<<std::endl;
 
 					double d[6];
@@ -380,6 +380,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 						d[1]=(projected[0]-vb[0])*(projected[0]-vb[0])+(projected[1]-vb[1])*(projected[1]-vb[1])+(projected[2]-vb[2])*(projected[2]-vb[2]);
 						d[2]=(projected[0]-vc[0])*(projected[0]-vc[0])+(projected[1]-vc[1])*(projected[1]-vc[1])+(projected[2]-vc[2])*(projected[2]-vc[2]);
 						//d[3]=(projected[0]-vd[0])*(projected[0]-vd[0])+(projected[1]-vd[1])*(projected[1]-vd[1])+(projected[2]-vd[2])*(projected[2]-vd[2]);
+						
 						//computing distances point-line
 
 						Point pr;
@@ -510,9 +511,6 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 				mindist=mindist*4;
 				//mindist=mindist*8;
 			}
-
-			//std::cout<<"AAAAAAAAAAAAAAAAA"<<std::endl;
-
 			//	mindist=mindist*100;
 			/*if (mindist<1){
 
