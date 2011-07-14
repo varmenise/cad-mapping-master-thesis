@@ -115,14 +115,14 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 				if(face.n_vertexes==4){//if the face is rectangular: if the porjected point is in the rectangle then the distance point-face is the distance point-plane.
 					/*if the projected point is outside the rectangle it can be in 8 different regions
 					
-				  1		  2        3
+				  1		   2        3
 					 _____________
 					|			  |		
 				  8	|             | 4
 					|             |
 					|_____________|
 					             
-				  7	      6        5 
+				  7	       6        5 
 					 
 					 
 					 */
