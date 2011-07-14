@@ -113,7 +113,11 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 				
 
 				if(face.n_vertexes==4){//if the face is rectangular: if the porjected point is in the rectangle then the distance point-face is the distance point-plane.
-					/*if the projected point is outside the rectangle it can be in 8 different regions
+					/*
+					 
+					 if the projected point is outside the rectangle it can be in 8 different regions
+					 
+					 
 					
 				  1		   2        3
 					 _____________
@@ -123,6 +127,9 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					|_____________|
 					             
 				  7	       6        5 
+					 
+					 
+					 
 					 
 					 
 					 */
@@ -266,7 +273,8 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 						minim=0;
 					}
 				}
-				if(face.n_vertexes==3){//if the face is triangular: if the projected point falls inside the triangle then the distance is the distance point-plane.
+				if(face.n_vertexes==3){
+					//if the face is triangular: if the projected point falls inside the triangle then the distance is the distance point-plane.
 					//If the porjection of the point falls outside the triangle then the distance between the point and each vertex and each segment-line is computed.
 					//The minimum among these distances is considered.
 					//std::cout<<"triangular face"<<std::endl;
