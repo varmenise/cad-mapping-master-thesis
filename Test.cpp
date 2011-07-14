@@ -22,7 +22,6 @@
 #include <vtkLine.h>
 #include <vtkMatrix3x3.h>
 
-
 #include "pcl/ModelCoefficients.h"
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
@@ -34,8 +33,6 @@
 #include <pcl/sample_consensus/model_types.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include "pcl/segmentation/extract_clusters.h"
-
-
 
 #include <iostream>
 #include <fstream> 
@@ -61,19 +58,14 @@
 #include <nuklei/KernelCollection.h>
 #include <time.h>
 #include <ctime>
+
 #define PI 3.14159265
-
-
-
 #define MAXLINE 30
-
 
 // input .ply .asc .xyz
 
 int main ( int argc, char *argv[] )
 {	
-
-
 	if(argc != 3)
 	{
 		std::cout << "Usage: " << argv[0] << "  Filename(.ply)" << std::endl;
@@ -83,13 +75,11 @@ int main ( int argc, char *argv[] )
 	std::string inputFilename = argv[1];
 	std::string inputRangeScene=argv[2];
 
-	int n_cluster=Clusters_Set::clusters_extraction(inputRangeScene);
+	int n_cluster=Clusters_Set::clusters_extraction(inputRangeScene); //extract clusters from the scene
 
 	vector <TranslLib::Translation> cluster_pose(n_cluster);
 
-
 	float x,y,z,xmin,xmax,ymin,ymax,zmin,zmax;
-
 
 	//LOAD PLYMODEL
 
@@ -113,31 +103,23 @@ int main ( int argc, char *argv[] )
 	int it=0,itr=0;
 	int c=0;
 
-
 	while(iter!= plymodel->faces.end()){
 
 		*face=*iter;
 
-
 		plane=face->getPlane(plymodel->vertexes,*face);
 		iter->plane=*plane;
 
-
 		iter++;
-
 		it++;
 
 	}
 
-
 	for(int icluster=0;icluster<n_cluster;icluster++){//for each cluster on the table
-
 
 		stringstream ss;
 		ss << "cloud_cluster_" << icluster << ".asc";
 		std::string sst=ss.str();
-
-
 
 		FILE *pFilein=fopen(sst.c_str(),"r");
 		int nt=0;
@@ -167,7 +149,6 @@ int main ( int argc, char *argv[] )
 				zmin=z;
 		}
 
-
 		int 	xMin=(xmax-xmin)/2+xmin-3;
 		int 	xMax=(xmax-xmin)/2+xmin+3;
 		int 	yMin=(ymax-ymin)/2+ymin-3;
@@ -175,9 +156,7 @@ int main ( int argc, char *argv[] )
 		int 	zMin=(zmax-zmin)/2+zmin-3;
 		int 	zMax=(zmax-zmin)/2+zmin+3;
 
-
 		//MAIN ALGORITHM
-
 
 		FILE* pFile=fopen (sst.c_str(), "r");
 
@@ -188,7 +167,6 @@ int main ( int argc, char *argv[] )
 		Ply *rotated_model=plymodel->New(plymodel);
 		using namespace TranslLib;
 		std::list<Translation> translations;
-
 
 		Point *point;
 		int iteration=0;
@@ -210,24 +188,16 @@ int main ( int argc, char *argv[] )
 		double prev_obj_value=-1;
 		int lmin_detector=0;
 
-
 		using namespace nuklei;
 		kernel::se3 k;
-
 
 		k.loc_h_ = 50; // Position standard deviation
 		k.ori_h_ = 180*PI/180; // Orientation standard deviation (radians)
 		double teta[3];
 
-
-
-
-
-
 		int extiteration2=0;
 		int alpha=2;
 		cycle=0;
-
 
 		extiteration=0;
 		int trasliteration=0,traslcounter=0;
@@ -236,18 +206,13 @@ int main ( int argc, char *argv[] )
 		double ybest=rand() % (yMax-yMin) +yMin;
 		double zbest=rand() % (zMax-zMin) +zMin;
 
-
 		best_pose->object_value=-1;
-
 
 		int lminbest_detector=0;
 		double curr_best_value,prev_best_value;
 
-
-
-		while(trasliteration<50){
+		while(trasliteration<50){ // iterations on the translations
 			trasliteration++;
-
 
 			if(lminbest_detector==0){
 				if (k.loc_h_>10)
@@ -266,7 +231,6 @@ int main ( int argc, char *argv[] )
 
 			}
 
-
 			k.loc_ = Vector3(xbest, ybest, zbest);
 			kernel::se3 r = k.sample();
 			Vector3 trasl=r.getLoc();
@@ -274,51 +238,36 @@ int main ( int argc, char *argv[] )
 			y=trasl[1];
 			z=trasl[2];
 
-
 			point= new Point();
 			point->px=x;
 			point->py=y;
 			point->pz=z;
-
-			model=plymodel->translate_model(plymodel,point,model);
-
+			model=plymodel->translate_model(plymodel,point,model);//generate a plymodel centred in a specific translation
 
 			Face *face=new Face();
 			std::list<Face>::iterator iter = model->faces.begin();
 			Plane *plane=new Plane();
 
-
 			while(iter!= model->faces.end()){
 
 				*face=*iter;
 
-
 				plane=face->getPlane(model->vertexes,*face);
 				iter->plane=*plane;
 
-
-
 				iter++;
-
 				it++;
-
 
 			}
 
-
-
 			TranslLib::Translation *translmodel=TranslLib::Translation::New(model,point);
-
 
 			std::vector<Point> pointcl;
 			Point pointtmp;
 
-
 			FILE *pFilein=fopen(sst.c_str(),"r");
 			int size=0;
-
 			float xf,yf,zf;
-
 
 			while(!feof(pFilein)){
 				fscanf(pFilein,"%f %f %f",&xf,&yf,&zf);
@@ -329,22 +278,19 @@ int main ( int argc, char *argv[] )
 				size++;
 			}
 
-
-			std::cout<<x<<" "<<y<<" "<<z<<std::endl;
+			//std::cout<<x<<" "<<y<<" "<<z<<std::endl;
 
 			translmodel->getPointDistance(pointcl,nt,*(translmodel->origin),size, 50);
 			if(translmodel->object_value>best_pose->object_value){
 				*best_pose=*translmodel;
 			}
 
-
-
 			extiteration=0;
 			iteration=0;
 			tetay=rand()%180-90;
 			tetax=rand()%180-90;
 			tetaz=rand()%180-90;
-			while(extiteration<100){
+			while(extiteration<100){//cycle of 100 iterations for each translation
 
 				extiteration++;
 				extiteration2++;
@@ -361,16 +307,12 @@ int main ( int argc, char *argv[] )
 					translations.clear();
 					k.ori_h_=180*PI/180;
 
-
 					tetay=rand()%180-90;
 					tetax=rand()%180-90;
 					tetaz=rand()%180-90;
-
-
 				}
 
-
-				while(iteration<20){
+				while(iteration<20){// for each combination of translation and orientation
 
 					teta[0]=tetax*PI/180;
 					teta[1]=tetay*PI/180;
@@ -382,11 +324,9 @@ int main ( int argc, char *argv[] )
 					k.ori_ = la::quaternionCopy(ori);
 					kernel::se3 r = k.sample();
 
-
 					teta[0]=atan2(2*(r.ori_[0]*r.ori_[1]+r.ori_[2]*r.ori_[3]), 1-2*(r.ori_[1]*r.ori_[1]+r.ori_[2]*r.ori_[2]));
 					teta[1]=asin(2*(r.ori_[0]*r.ori_[2]-r.ori_[3]*r.ori_[1]));
 					teta[2]=atan2(2*(r.ori_[0]*r.ori_[3]+r.ori_[1]*r.ori_[2]),1-2*(r.ori_[2]*r.ori_[2]+r.ori_[3]*r.ori_[3]));
-
 
 					point= new Point();
 					point->px=x;
@@ -395,33 +335,23 @@ int main ( int argc, char *argv[] )
 
 					translated_model=plymodel->rotate_model(plymodel,point,translated_model,teta[0]*180/PI,teta[1]*180/PI,teta[2]*180/PI);
 
-
 					Face *face=new Face();
 					std::list<Face>::iterator iter = translated_model->faces.begin();
 					Plane *plane=new Plane();
 					it=0;
 					itr=0;
 
-
-
 					while(iter!= translated_model->faces.end()){
 
 						*face=*iter;
 
-
 						plane=face->getPlane(translated_model->vertexes,*face);
 						iter->plane=*plane;
 
-
-
 						iter++;
-
 						it++;
 
-
 					}
-
-
 
 					TranslLib::Translation *transl=TranslLib::Translation::New(translated_model,point);
 
@@ -439,16 +369,11 @@ int main ( int argc, char *argv[] )
 					delete face;
 					delete plane;
 
-
 				}
-
 
 				fclose(pFile);
 
-
-
 				std::list<Vertex>::iterator iter1 = translated_model->vertexes.begin();
-
 
 				iter2 = translations.begin();
 
@@ -458,7 +383,6 @@ int main ( int argc, char *argv[] )
 				int contap=0;
 				std::vector<Point> pointcl;
 				Point pointtmp;
-
 
 				FILE *pFilein=fopen(sst.c_str(),"r");
 				int size=0;
@@ -473,16 +397,11 @@ int main ( int argc, char *argv[] )
 					size++;
 				}
 
-
 				count=0;
-
 
 				while(iter2!=translations.end()){
 
-
-					iter2->getPointDistance(pointcl,nt,*(iter2->origin),size, 50);
-
-
+					iter2->getPointDistance(pointcl,nt,*(iter2->origin),size, 50);//compute the objective function
 
 					iter2++;
 					nt++;
@@ -490,7 +409,6 @@ int main ( int argc, char *argv[] )
 
 				fclose(pFILE);
 				fclose(pFilein);
-
 
 				count=0;
 
@@ -500,7 +418,6 @@ int main ( int argc, char *argv[] )
 				while(iter2!=translations.end()){
 
 					if(iter2->flag==1){
-
 
 						if(count==0){
 							max_value=iter2->object_value;
@@ -513,16 +430,12 @@ int main ( int argc, char *argv[] )
 						}
 						else if (iter2->object_value<min_value){
 							min_value=iter2->object_value;
-							*worstpose=*iter2;
+							*worstpose=*iter2;//not used
 						}
-
-
-
 						count++;
 					}
 					iter2++;
 				}
-
 
 				iteration=0;
 				prev_obj_value=curr_obj_value;
@@ -535,16 +448,8 @@ int main ( int argc, char *argv[] )
 					lmin_detector=0;
 				}
 
-
 				translations.clear();
-
-
-
-
 				translations.push_back(*pose);
-
-
-
 
 				tetay=pose->orientation[0];
 				tetax=pose->orientation[1];
@@ -552,10 +457,7 @@ int main ( int argc, char *argv[] )
 
 			}
 
-
-
 			best.push_back(*pose);
-
 			iter2=best.begin();
 			double max_value=0;
 			max_value=iter2->object_value;
@@ -578,7 +480,6 @@ int main ( int argc, char *argv[] )
 				zbest=best_pose->origin->pz;
 				std::cout<<"orientation"<<best_pose->orientation[0]<<" "<<best_pose->orientation[1]<<" "<<best_pose->orientation[2]<<std::endl;
 			}
-
 
 			else {
 				std::cout<<"else"<<std::endl;
@@ -618,7 +519,6 @@ int main ( int argc, char *argv[] )
 
 			iter2++;
 		}
-
 
 		std::cout<<"BEST SOLUTION"<<std::endl;
 		std::cout<<"pose x="<<pose->origin->px<<"y="<<pose->origin->py<<"z="<<pose->origin->pz<<" "<<pose->object_value<<std::endl;
