@@ -21,12 +21,12 @@ public:
 	float py;
 	float pz;
 
-	float computeDistance( const float &a,const float &b,const float & c,const float & d) const;
+	float computeDistance( const float &a,const float &b,const float & c,const float & d) const;//distance point-plane
 
-	static float computeDistance2P(const Point &point,const Vertex &vertex);
-	static float computeDistance2P(const Point &point,const Point &origin);
-	static float computeDistance2P(const Vertex &point,const Vertex &vertex);
-	static float computeDistancePointLine(const Point &point,const Vertex &v1,const Vertex &v2);
+	static float computeDistance2P(const Point &point,const Vertex &vertex);//returns the distance between a point of the range scene and a vertex of the ply model
+	static float computeDistance2P(const Point &point,const Point &origin);//returns the distance between two points
+	static float computeDistance2P(const Vertex &point,const Vertex &vertex);//returns the distances between two vertexes
+	static float computeDistancePointLine(const Point &point,const Vertex &v1,const Vertex &v2);//returns the distance between a point and an infinite line
 };
 
 class Plane{
@@ -37,7 +37,7 @@ public:
 	float B[3];//not used?
 	float m[4][4];//not used?
 
-	float* getParameters(Plane*plane);
+	float* getParameters(Plane*plane);//computes the parametres for the plane
 	//	float correctDistance(Point point);
 	float correctDistance(const Point &point,const Point &origin);
 
@@ -48,7 +48,7 @@ public:
 	int n_vertexes;
 	int face_vertexes[4];
 	Plane plane;
-	Plane* getPlane(const std::list<Vertex> &vertexes,const Face &face);
+	Plane* getPlane(const std::list<Vertex> &vertexes,const Face &face);//returns the plane the face belongs to
 };
 
 
