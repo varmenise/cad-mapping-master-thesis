@@ -112,16 +112,17 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 				projected[2]=p[2]-t*normal[2];
 				
 
-				if(face.n_vertexes==4){//if the face is rectangular: if the porjected point is in the rectangle then the distance point-face is the distance point-plane.
+				if(face.n_vertexes==4){
 					/*
-					 
+					 if the face is rectangular: 
+					 if the projected point is in the rectangle then the distance point-face is the distance point-plane.
 					 if the projected point is outside the rectangle it can be in 8 different regions
 					 
 					 
 					
 				  1		   2        3
 					 _____________
-					|			  |		
+					|			  |	
 				  8	|             | 4
 					|             |
 					|_____________|
@@ -143,7 +144,8 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					za=plane.point[0].vz;
 					zb=plane.point[1].vz;
 
-					//if the projection of the projected point on the edge determined by the vertexes 0 and 1 of the plane does not fall within the edge then the counter "entered" is incremented
+					//if the projection of the projected point on the edge determined by the vertexes 0 and 1 of the plane
+					//does not fall within the edge then the counter "entered" is incremented
 					if(((projected[0]-xa)*(xb-xa)+(projected[1]-ya)*(yb-ya)+(projected[2]-za)*(zb-za)>=0)&&(projected[0]-xb)*(xa-xb)+(projected[1]-yb)*(ya-yb)+(projected[2]-zb)*(za-zb)>=0){
 
 						dist+=0;
@@ -163,7 +165,8 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					yb=plane.point[2].vy;
 					za=plane.point[1].vz;
 					zb=plane.point[2].vz;
-					//if the projection of the projected point on the edge determined by the vertexes 1 and 2 of the plane does not fall within the edge then the counter "entered" is incremented
+					//if the projection of the projected point on the edge determined by the vertexes 1 and 2 of the plane
+					//does not fall within the edge then the counter "entered" is incremented
 					if(((projected[0]-xa)*(xb-xa)+(projected[1]-ya)*(yb-ya)+(projected[2]-za)*(zb-za)<0)||(projected[0]-xb)*(xa-xb)+(projected[1]-yb)*(ya-yb)+(projected[2]-zb)*(za-zb)<0){
 
 						entered++;
@@ -177,7 +180,8 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					yb=plane.point[3].vy;
 					za=plane.point[2].vz;
 					zb=plane.point[3].vz;
-					//if the projection of the projected point on the edge determined by the vertexes 2 and 3 of the plane does not fall within the edge then the counter "entered" is incremented
+					//if the projection of the projected point on the edge determined by the vertexes 2 and 3 of the plane
+					//does not fall within the edge then the counter "entered" is incremented
 					if(((projected[0]-xa)*(xb-xa)+(projected[1]-ya)*(yb-ya)+(projected[2]-za)*(zb-za)<0)||(projected[0]-xb)*(xa-xb)+(projected[1]-yb)*(ya-yb)+(projected[2]-zb)*(za-zb)<0){
 
 						entered++;
@@ -191,7 +195,8 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					yb=plane.point[0].vy;
 					za=plane.point[3].vz;
 					zb=plane.point[0].vz;
-					//if the projection of the projected point on the edge determined by the vertexes 3 and 0 of the plane does not fall within the edge then the counter "entered" is incremented
+					//if the projection of the projected point on the edge determined by the vertexes 3 and 0 of the plane 
+					//does not fall within the edge then the counter "entered" is incremented
 					if(((projected[0]-xa)*(xb-xa)+(projected[1]-ya)*(yb-ya)+(projected[2]-za)*(zb-za)<0)||(projected[0]-xb)*(xa-xb)+(projected[1]-yb)*(ya-yb)+(projected[2]-zb)*(za-zb)<0){
 
 						entered++;
@@ -269,12 +274,14 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 							}
 						}
 					}
-					if(entered==0){ //if entered equals 0, then the projected point is in region 0 and the distance point-face coincides with the distance point-plane
+					if(entered==0){ 
+						//if entered equals 0, then the projected point is in region 0 and the distance point-face coincides with the distance point-plane
 						minim=0;
 					}
 				}
 				if(face.n_vertexes==3){
-					//if the face is triangular: if the projected point falls inside the triangle then the distance is the distance point-plane.
+					//if the face is triangular: 
+					//if the projected point falls inside the triangle then the distance is the distance point-plane.
 					//If the porjection of the point falls outside the triangle then the distance between the point and each vertex and each segment-line is computed.
 					//The minimum among these distances is considered.
 					//std::cout<<"triangular face"<<std::endl;
