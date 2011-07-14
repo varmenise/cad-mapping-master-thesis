@@ -125,7 +125,7 @@ float TranslLib::Translation::getPointDistance(const std::vector<Point> &pointcl
 					|             |
 				 8	|             |4
 					|_____________|
-				 7               6              5
+				 7             6          5
 					 
 				*/
 					 
